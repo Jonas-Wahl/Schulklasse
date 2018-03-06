@@ -5,6 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
+using Amazon;
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.Model;
+using Amazon.DynamoDBv2.DocumentModel;
+
 namespace Schulverwaltung
 {
     class Schulklasse
@@ -25,7 +30,7 @@ namespace Schulverwaltung
         }
 
         public void addSchueler(String aName, String aVorname, String aStrasse, String aHNr,
-                uint aPLZ, String aOrt, String aTelNr, DateTime aGebDatum)
+                uint aPLZ, String aOrt, String aTelNr, String aGebDatum)
         {
             if (AnzahlSchueler >= maxSchueler)
             {
@@ -81,10 +86,53 @@ namespace Schulverwaltung
             {
                 s = sr.ReadLine();
                 ls = s.Split(',');
-                addSchueler(ls[0], ls[1], ls[2], ls[3], Convert.ToUInt32(ls[4]), ls[5], ls[6], Convert.ToDateTime(ls[7]));
+                addSchueler(ls[0], ls[1], ls[2], ls[3], Convert.ToUInt32(ls[4]), ls[5], ls[6], ls[7]);
             }
             sr.Close();
             fs.Close();
+        }
+
+        public void SaveSchueler()
+        {
+            
+            Table table = GetTableObject("Schueler");
+            foreach (Schueler s in liSchueler)
+            {
+                Document doc = s.toDoc();
+                table.PutItem(doc);
+            }
+        }
+
+        public void loadSchueler()
+        {
+            Table table = GetTableObject("Schueler");
+            for (int i = 1; i <= maxSchueler; i++)
+            {
+                Document doc = table.GetItem(i); // schueler 1+3
+                if (doc != null)
+                {
+                    var json = doc.ToJsonPretty();
+                    Schueler s = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<Schueler>(json);
+                    liSchueler.Add(s);
+                }
+            }
+        }
+
+        private static Table GetTableObject(string tableName)
+        {
+            // First, set up a DynamoDB client for DynamoDB Local
+            AmazonDynamoDBConfig ddbConfig = new AmazonDynamoDBConfig();
+            //ddbConfig.ServiceURL = "http://localhost:8000";
+            ddbConfig.RegionEndpoint = RegionEndpoint.EUCentral1; // aws server Frankfurt a.M.
+            AmazonDynamoDBClient client;
+            client = new AmazonDynamoDBClient(ddbConfig);
+
+            // Now, create a Table object for the specified table
+            Table table = null;
+            
+            table = Table.LoadTable(client, tableName);
+            
+            return (table);
         }
     }
 }

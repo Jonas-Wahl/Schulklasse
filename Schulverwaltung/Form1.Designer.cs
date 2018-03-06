@@ -58,6 +58,8 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.ts_Export = new System.Windows.Forms.ToolStripLabel();
             this.ts_Import = new System.Windows.Forms.ToolStripLabel();
+            this.tsCloudSave = new System.Windows.Forms.ToolStripLabel();
+            this.tsCloudLoad = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -289,7 +291,9 @@
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ts_Export,
-            this.ts_Import});
+            this.ts_Import,
+            this.tsCloudSave,
+            this.tsCloudLoad});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(674, 25);
@@ -309,6 +313,20 @@
             this.ts_Import.Size = new System.Drawing.Size(69, 22);
             this.ts_Import.Text = "CSV-Import";
             this.ts_Import.Click += new System.EventHandler(this.ts_Import_Click);
+            // 
+            // tsCloudSave
+            // 
+            this.tsCloudSave.Name = "tsCloudSave";
+            this.tsCloudSave.Size = new System.Drawing.Size(106, 22);
+            this.tsCloudSave.Text = "In Cloud speichern";
+            this.tsCloudSave.Click += new System.EventHandler(this.tsCloudSave_Click);
+            // 
+            // tsCloudLoad
+            // 
+            this.tsCloudLoad.Name = "tsCloudLoad";
+            this.tsCloudLoad.Size = new System.Drawing.Size(94, 22);
+            this.tsCloudLoad.Text = "Von Cloud laden";
+            this.tsCloudLoad.Click += new System.EventHandler(this.tsCloudLoad_Click);
             // 
             // Form1
             // 
@@ -376,6 +394,8 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripLabel ts_Export;
         private System.Windows.Forms.ToolStripLabel ts_Import;
+        private System.Windows.Forms.ToolStripLabel tsCloudSave;
+        private System.Windows.Forms.ToolStripLabel tsCloudLoad;
     }
 }
 

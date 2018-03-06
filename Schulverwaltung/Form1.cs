@@ -29,7 +29,7 @@ namespace Schulverwaltung
             uint aPLZ;
             String aOrt;
             String aTelNr;
-            DateTime aGebDatum;
+            String aGebDatum;
             
             try
             {
@@ -40,7 +40,7 @@ namespace Schulverwaltung
                 aPLZ = Convert.ToUInt32(tbPLZ.Text);
                 aOrt = tbOrt.Text;
                 aTelNr = tbTelefon.Text;
-                aGebDatum = Convert.ToDateTime(tbGeburtsdatum.Text);
+                aGebDatum = tbGeburtsdatum.Text;
                 
                 klasse.addSchueler(aName, aVorname, aStrasse, aHNr, aPLZ, aOrt, aTelNr, aGebDatum);
                 showList();
@@ -70,7 +70,7 @@ namespace Schulverwaltung
                     locLvwItem.SubItems.Add(s.PLZ.ToString());
                     locLvwItem.SubItems.Add(s.Ort);
                     locLvwItem.SubItems.Add(s.Telefon);
-                    locLvwItem.SubItems.Add(s.GebDatum.ToLongDateString());
+                    locLvwItem.SubItems.Add(s.GebDatum);
                     lvSchueler.Items.Add(locLvwItem);
                 }
                 lvSchueler.EndUpdate();
@@ -92,7 +92,7 @@ namespace Schulverwaltung
                 aktSchueler.PLZ = Convert.ToUInt32(tbPLZ.Text);
                 aktSchueler.Ort = tbOrt.Text;
                 aktSchueler.Telefon = tbTelefon.Text;
-                aktSchueler.GebDatum = Convert.ToDateTime(tbGeburtsdatum.Text);
+                aktSchueler.GebDatum = tbGeburtsdatum.Text;
                 showList();
             }
             catch (Exception ex)
@@ -122,7 +122,7 @@ namespace Schulverwaltung
                 tbPLZ.Text = aktSchueler.PLZ.ToString();
                 tbOrt.Text = aktSchueler.Ort;
                 tbTelefon.Text = aktSchueler.Telefon;
-                tbGeburtsdatum.Text = aktSchueler.GebDatum.ToShortDateString();
+                tbGeburtsdatum.Text = aktSchueler.GebDatum;
             }
             catch (Exception ex)
             {
@@ -168,7 +168,30 @@ namespace Schulverwaltung
             }
         }
 
+        private void tsCloudSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                klasse.SaveSchueler();
+                showList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
 
-
+        private void tsCloudLoad_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                klasse.loadSchueler();
+                showList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }

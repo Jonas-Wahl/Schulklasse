@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Amazon.DynamoDBv2.DocumentModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,23 @@ namespace Schulverwaltung
 {
     class Schueler
     {
+        private int sSchuelerId;
+
+        public int SchuelerId
+        {
+            get { return sSchuelerId; }
+            set
+            {
+                if (value > lastSchuelerId)
+                {
+                    lastSchuelerId = value;
+                }
+                sSchuelerId = value;
+            }
+        }
+
+        private static int lastSchuelerId = 0;
+
         private String sName;
 
         public String Name
@@ -64,17 +82,23 @@ namespace Schulverwaltung
             set { sTelefon = value; }
         }
 
-        private DateTime dtGebDatum;
+        private String dtGebDatum;
 
-        public DateTime GebDatum
+        public String GebDatum
         {
             get { return dtGebDatum; }
             set { dtGebDatum = value; }
         }
         
-        public Schueler(String aName, String aVorname, String aStrasse, String aHNr, 
-                uint aPLZ, String aOrt, String aTelNr, DateTime aGebDatum)
+        public Schueler() // used for deserializer
         {
+
+        }
+
+        public Schueler(String aName, String aVorname, String aStrasse, String aHNr, 
+                uint aPLZ, String aOrt, String aTelNr, String aGebDatum)
+        {
+            SchuelerId = getNextSchuelerId();
             Name = aName;
             Vorname = aVorname;
             Strasse = aStrasse;
@@ -83,6 +107,12 @@ namespace Schulverwaltung
             Ort = aOrt;
             Telefon = aTelNr;
             GebDatum = aGebDatum;
+        }
+
+        private static int getNextSchuelerId()
+        {
+            lastSchuelerId++;
+            return lastSchuelerId;
         }
 
         public String toCSV()
@@ -97,5 +127,11 @@ namespace Schulverwaltung
             //return Name + seperator + Vorname + seperator + Strasse + seperator + Hausnummer + seperator + PLZ.ToString() + seperator + Ort + seperator + Telefon + seperator + GebDatum.ToString();
         }
 
+        public Document toDoc()
+        {
+            var json = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(this);
+            Document doc = Document.FromJson(json);
+            return doc;
+        }
     }
 }
